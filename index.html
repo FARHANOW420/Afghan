@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ps">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Farhano Recovery</title>
+<style>
+:root{--bg:#020a06;--panel:#06170e;--line:#123d27;--green:#22ff91;--muted:#7ca88d;--text:#d9ffe8}
+*{box-sizing:border-box}
+body{text-align:center;margin:0;background:radial-gradient(ellipse at top,#082818 0,#020a06 55%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+.wrap{max-width:620px;margin:auto;padding:4px 9px 6px}
+.top{display:flex;justify-content:center;align-items:center;gap:8px;color:var(--green);font-size:11px;letter-spacing:.3px;margin-bottom:6px;text-align:center}
+.pill{border:1px solid #17643c;border-radius:20px;padding:5px 10px;background:#052012}
+h1{font-size:18px;margin:2px 0;color:#eafff1} h1 span{color:var(--green)}
+.sub{color:var(--muted);font-size:11px;margin-bottom:5px;text-align:center}
+.panel{border:1px solid var(--line);background:linear-gradient(145deg,#071b10,#030d08);border-radius:14px;padding:8px;margin:4px 0;box-shadow:0 0 22px #00ff6410}
+.panel-head{display:flex;justify-content:center;text-align:center;gap:8px;align-items:center;font-size:13px;color:#b8f8d0}
+.status{font-size:10px;color:var(--green);border:1px solid #155632;border-radius:5px;padding:4px 7px}
+.circle{width:86px;height:86px;border-radius:50%;margin:6px auto 5px;display:grid;place-content:center;text-align:center;border:5px solid #103c25;border-top-color:var(--green);box-shadow:0 0 28px #00ff6320;position:relative}
+.percent{font-size:25px;font-weight:750;color:var(--green);line-height:1.1}
+.small{font-size:8px;letter-spacing:.5px;color:#7da991;margin-top:6px}
+.track{height:5px;background:#102c1c;border-radius:20px;overflow:hidden;margin:8px 0}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#00a95b,#34ff9c);transition:width .25s}
+.section-title{font-size:11px;color:#81c79b;margin:5px 2px 3px;text-align:center}
+.module{border:1px solid #123a25;border-radius:8px;padding:5px 8px;margin:3px 0;background:#04130b}
+.module-top{display:flex;align-items:center;gap:7px;text-align:right}
+.ico{width:25px;height:25px;display:grid;place-items:center;border:1px solid #17472e;border-radius:9px;color:var(--green);font-size:18px;background:#061e11}
+.module-name{flex:1;font-size:12px;font-weight:650;text-align:right}
+.pct{color:var(--green);font-weight:700;font-size:14px}
+.meta{font-size:9px;color:#6d9a7d;margin-top:6px;display:flex;justify-content:space-between;gap:8px;text-align:right}
+.mini-track{height:3px;background:#0e2a1a;margin-top:8px;border-radius:5px;overflow:hidden}
+.mini-fill{height:100%;width:0;transition:width .25s;background:#29ff91}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+button{font:inherit;cursor:pointer;border-radius:9px;padding:7px 6px;border:1px solid #1a6840;background:#082315;color:#bafbd3;font-weight:700}
+button.primary{background:var(--green);color:#03200f;border-color:var(--green)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.note{font-size:9px;line-height:1.35;color:#9fc9ad;margin-top:4px;text-align:center}
+.notice{border-right:3px solid #c3a33a;background:#1a190b;padding:10px 12px;border-radius:5px;color:#e8d991;font-size:11px;line-height:1.8;margin-top:14px}
+footer{text-align:center;color:#49765b;font-size:10px;margin-top:20px}
+@media(min-width:560px){.wrap{padding-top:16px}.circle{width:125px;height:125px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="top"><span>◉ د ریکاوري سیستم</span></div>
+<h1>د موبایل فایلونو <span>ریکاوري</span></h1>
+<div class="sub">د فایلونو د ریکاوري لپاره ساده فارمت</div>
+<section class="panel">
+<div class="panel-head"><span>د ریکاوري عمومي حالت</span><span class="status" id="status">چمتو</span></div>
+<div class="circle"><div><div class="percent" id="overall">0%</div><div class="small">ټوله پرمختیا</div></div></div>
+<div class="track"><div class="fill" id="overallFill"></div></div>
+<div id="message" class="note">د شروع لپاره لاندې تڼۍ کېکاږئ</div>
+<div class="buttons"><button class="primary" id="start">ریکاوري شروع</button><button id="reset">له سره شروع</button></div>
+</section>
+<div class="section-title">د ریکاوري برخې</div>
+<section id="modules"></section>
+
+<div class="note">سلام ✋<br>د موبایل ریکاوري ستاسې په خدمت کې ده. هیله کوم، غلطه استفاده مه ځینې کوئ.</div>
+<div class="note" style="text-align:center">ســـــــتاسی ڪشر ورور ریس فرهانوو</div>
+
+</main>
+<script>
+const items=[
+{name:"عکسونه",icon:"📸",code:"د عکسونو ریکاوري"},
+{name:"ویډیوګانې",icon:"🎬",code:"د ویډیوګانو ریکاوري"},
+{name:"پیغامونه",icon:"💬",code:"د پیغامونو ریکاوري"},
+{name:"اسناد",icon:"📄",code:"د اسنادو ریکاوري"}];
+const host=document.getElementById("modules");
+items.forEach((it,i)=>{
+const el=document.createElement("div");el.className="module";
+el.innerHTML=`<div class="module-top"><div class="ico">${it.icon}</div><div class="module-name">${it.name}</div><div class="pct" id="pct${i}">0%</div></div><div class="mini-track"><div class="mini-fill" id="fill${i}"></div></div><div class="meta"><span id="state${i}">انتظار</span><span>${it.code}</span></div>`;
+host.appendChild(el);
+});
+let timer=null,progress=0;
+function paint(p){
+progress=p;document.getElementById("overall").textContent=p+"%";document.getElementById("overallFill").style.width=p+"%";
+items.forEach((it,i)=>{const val=Math.max(0,Math.min(100,Math.round((p-(i*9))/0.72)));
+document.getElementById("pct"+i).textContent=val+"%";document.getElementById("fill"+i).style.width=val+"%";
+document.getElementById("state"+i).textContent=val>=100?"بشپړ":val>0?"سکین روان دی":"انتظار";});
+}
+document.getElementById("start").addEventListener("click",()=>{
+if(timer!==null)return;
+document.getElementById("status").textContent="سکین روان دی";
+document.getElementById("message").textContent="ریکاوري په عادي ډول روانه ده...";
+document.getElementById("start").disabled=true;
+timer=setInterval(()=>{const next=Math.min(100,progress+1);paint(next);
+if(next>=100){clearInterval(timer);timer=null;document.getElementById("status").textContent="پروسه بشپړه شوه";
+document.getElementById("message").textContent="ستاسې د ډیمو ریکاوري بشپړه شوه — هېڅ فایل نه دی سکین شوی.";
+document.getElementById("start").disabled=false;}},6000);
+});
+document.getElementById("reset").addEventListener("click",()=>{
+if(timer!==null){clearInterval(timer);timer=null;}paint(0);
+document.getElementById("status").textContent="چمتو";document.getElementById("message").textContent="د شروع لپاره لاندې تڼۍ کېکاږئ";
+document.getElementById("start").disabled=false;
+});
+</script>
+</body>
+</html>
